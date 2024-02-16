@@ -1,0 +1,266 @@
+<?xml version="1.0" ?>
+<sdf version="1.7">
+  <model name="biglide">
+    <pose>0 0 0.0  0 0 0</pose>
+    <self_collide>false</self_collide>
+    <link name="leftRail">
+      <pose>0 0 0  0 0 0</pose>
+      <inertial>
+        <mass>1.0</mass>
+        <inertia>
+          <ixx>1e-5</ixx>
+          <iyy>1e-5</iyy>
+          <izz>1e-5</izz>
+          <ixy>0.0</ixy>
+          <ixz>0.0</ixz>
+          <iyz>0.0</iyz>
+        </inertia>
+      </inertial>
+      <gravity>0</gravity>
+      <visual name="leftRailVisual">
+        <geometry>
+          <box>
+            <size>0.01 5.0 0.01</size>
+          </box>
+        </geometry>
+      </visual>
+    </link>
+    <link name="rightRail">
+      <pose>0.4 0 0  0 0 0</pose>
+      <inertial>
+        <mass>1.0</mass>
+        <inertia>
+          <ixx>1e-5</ixx>
+          <iyy>1e-5</iyy>
+          <izz>1e-5</izz>
+          <ixy>0.0</ixy>
+          <ixz>0.0</ixz>
+          <iyz>0.0</iyz>
+        </inertia>
+      </inertial>
+      <gravity>0</gravity>
+      <visual name="rightRailVisual">
+        <geometry>
+          <box>
+            <size>0.01 5.0 0.01</size>
+          </box>
+        </geometry>
+      </visual>
+    </link>
+    <link name="leftFoot">
+      <pose>0 0 0  0 0 0</pose>
+      <inertial>
+        <mass>1.0</mass>
+        <inertia>
+          <ixx>1e-5</ixx>
+          <iyy>1e-5</iyy>
+          <izz>1e-5</izz>
+          <ixy>0.0</ixy>
+          <ixz>0.0</ixz>
+          <iyz>0.0</iyz>
+        </inertia>
+      </inertial>
+      <gravity>0</gravity>
+      <visual name="leftBoxVisual">
+        <geometry>
+          <box>
+            <size>0.05 0.15 0.05</size>
+          </box>
+        </geometry>
+      </visual>
+    </link>
+    <link name="rightFoot">
+      <pose>0.4 0 0  0 0 0</pose>
+      <inertial>
+        <mass>1.0</mass>
+        <inertia>
+          <ixx>1e-5</ixx>
+          <iyy>1e-5</iyy>
+          <izz>1e-5</izz>
+          <ixy>0.0</ixy>
+          <ixz>0.0</ixz>
+          <iyz>0.0</iyz>
+        </inertia>
+      </inertial>
+      <gravity>0</gravity>
+      <visual name="rightBoxVisual">
+        <geometry>
+          <box>
+            <size>0.05 0.15 0.05</size>
+          </box>
+        </geometry>
+      </visual>
+    </link>
+    <link name="leftArm">
+      <pose>0.0 0.0 0  0 0 0.7853981</pose>
+      <inertial>
+        <pose>0.2828427 0.0 0  0 0 0.0</pose>
+        <mass>1.0</mass>
+        <inertia>
+          <ixx>1e-5</ixx>
+          <iyy>1e-5</iyy>
+          <izz>1e-5</izz>
+          <ixy>0.0</ixy>
+          <ixz>0.0</ixz>
+          <iyz>0.0</iyz>
+        </inertia>
+      </inertial>
+      <gravity>0</gravity>
+      <visual name="leftArmVisual">
+        <pose>0.14142135623 0.0 0  0 0 0.0</pose>
+        <geometry>
+          <box>
+            <size>0.2828427 0.05 0.05</size>
+          </box>
+        </geometry>
+      </visual>
+    </link>
+    <link name="rightArm">
+      <pose>0.4 0.0 0 0 0 2.3561949</pose>
+      <inertial>
+        <pose>0.2828427 0.0 0  0 0 0.0</pose>
+        <mass>1.0</mass>
+        <inertia>
+          <ixx>1e-5</ixx>
+          <iyy>1e-5</iyy>
+          <izz>1e-5</izz>
+          <ixy>0.0</ixy>
+          <ixz>0.0</ixz>
+          <iyz>0.0</iyz>
+        </inertia>
+      </inertial>
+      <gravity>0</gravity>
+      <visual name="rightArmVisual">
+        <pose>0.14142135623 0.0 0 0 0 0.0 </pose>
+        <geometry>
+          <box>
+            <size>0.2828427 0.05 0.05</size>
+          </box>
+        </geometry>
+      </visual>
+    </link>
+    <link name="endEffector">
+      <pose>0.2 0.2 0  0 0 0</pose>
+      <inertial>
+        <mass>1.0</mass>
+        <inertia>
+          <ixx>1e-5</ixx>
+          <iyy>1e-5</iyy>
+          <izz>1e-5</izz>
+          <ixy>0.0</ixy>
+          <ixz>0.0</ixz>
+          <iyz>0.0</iyz>
+        </inertia>
+      </inertial>
+      <gravity>0</gravity>
+      <visual name="endEffectorVisual">
+        <geometry>
+          <cylinder>
+            <radius>0.05</radius>
+            <length>0.05</length>
+          </cylinder>
+        </geometry>
+      </visual>
+    </link>
+    <joint name="jointLeftRail" type="fixed">
+      <pose>0 0 0 0 0 0</pose>
+      <parent>world</parent>
+      <child>leftRail</child>
+    </joint>
+    <joint name="A11" type="prismatic">
+      <pose>0 0 0 0 0 0</pose>
+      <parent>world</parent>
+      <child>leftFoot</child>
+      <axis>
+        <xyz>0 1 0</xyz>
+        <limit>
+        <lower>-1</lower>
+        <upper>1</upper>
+      </limit>
+      </axis>
+
+    </joint>
+    <joint name="A21" type="prismatic">
+      <pose>0 0 0 0 0 0</pose>
+      <parent>rightFoot</parent>
+      <child>rightRail</child>
+      <axis>
+        <xyz>0 1 0</xyz>
+        <limit>
+        <lower>-1</lower>
+        <upper>1</upper>
+      </limit>
+      </axis>
+
+    </joint>
+    <joint name="A12" type="revolute">
+      <pose>0 0 0 0 0 0</pose>
+      <parent>leftFoot</parent>
+      <child>leftArm</child>
+      <axis>
+        <xyz>0 0 1</xyz>
+      </axis>
+    </joint>
+    <joint name="A22" type="revolute">
+      <pose>0.0 0 0 0 0 0</pose>
+      <parent>rightArm</parent>
+      <child>rightFoot</child>
+      <axis>
+        <xyz>0 0 1</xyz>
+      </axis>
+    </joint>
+    <joint name="A13" type="revolute">
+      <parent>leftArm</parent>
+      <child>rightArm</child>
+      <pose>0.28284271247461906 0 0 0 0 0</pose>
+      <axis>
+        <xyz>0 0 1</xyz>
+      </axis>
+    </joint>
+    <joint name="jointEndEffector" type="fixed">
+      <parent>leftArm</parent>
+      <child>endEffector</child>
+    </joint>
+
+    <!-- this one below is changed to a plugin -->
+    <!--joint name="jointRightRail" type="fixed">
+      <pose>0 0 0 0 0 0</pose>
+      <parent>world</parent>
+      <child>rightRail</child>
+    </joint-->
+
+    <link name="rightRailDummy"/>
+
+    <joint name="rightRailJoint" type="fixed">
+      <parent>world</parent>
+      <child>rightRailDummy</child>
+    </joint>
+
+    <!-- custom plugin, simpler but custom -->
+    <!--plugin filename="libattach-links.so" name="gz::sim::systems::AttachLinks">
+      <parent>rightRailDummy</parent>
+      <child>rightRail</child>
+    </plugin-->
+
+    <!-- existing plugin, hope this model is spawned under this name -->
+    <plugin filename="libgz-sim-detachable-joint-system.so" name="gz::sim::systems::DetachableJoint">
+      <parent_link>rightRailDummy</parent_link>
+      <child_model>biglide</child_model>  <!-- of course I know him, it's me -->
+      <child_link>rightRail</child_link>
+      <attach_topic>close_loop</attach_topic>
+    </plugin>
+
+    <plugin filename="libignition-gazebo-joint-state-publisher-system.so"
+            name="ignition::gazebo::systems::JointStatePublisher"/>
+
+    <plugin filename="libignition-gazebo-apply-joint-force-system.so"
+          name="ignition::gazebo::systems::ApplyJointForce">
+        <joint_name>A11</joint_name>
+    </plugin>
+
+    <plugin filename="libignition-gazebo-apply-joint-force-system.so"
+          name="ignition::gazebo::systems::ApplyJointForce">
+        <joint_name>A21</joint_name>
+    </plugin>
+  </model>
+</sdf>
