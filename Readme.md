@@ -39,7 +39,7 @@ A custom plugin is also provided in this package, namely `AttachLinks`. This one
 
 Two examples are given, see the `model` folder and the launch file.
 
-- a five bar from the [Gazebo classic example](https://classic.gazebosim.org/tutorials?tut=kinematic_loop&cat=)
+- a four bar from the [Gazebo classic example](https://classic.gazebosim.org/tutorials?tut=kinematic_loop&cat=)
 
 ![](images/five_bar.gif)
 
