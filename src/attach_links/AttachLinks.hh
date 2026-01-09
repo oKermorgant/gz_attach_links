@@ -21,8 +21,12 @@ namespace systems
   /// ## System Parameters
   ///
   /// - `<parent>`: Name of the link that will be considered the parent.
+  ///   Can use submodel notation in the form "sub_model::link" or 
+  ///   "sub_model::subsub_model::link" for nested submodels.
   ///
   /// - `<child>`: Name of the link that will be considered the child.
+  ///   Can use submodel notation in the form "sub_model::link" or 
+  ///   "sub_model::subsub_model::link" for nested submodels.
 
   class AttachLinks
       : public System,
@@ -58,6 +62,14 @@ namespace systems
     /// \brief Whether all parameters are valid and the system can proceed
     private: bool validConfig{false};
 
+    /// \brief Helper function to find a link by path, supporting submodel notation
+    /// \param[in] _ecm Entity component manager
+    /// \param[in] _modelEntity Parent model entity
+    /// \param[in] _path Path to the link in the form "model::submodel::link"
+    /// \return Entity of the link, or kNullEntity if not found
+    private: Entity FindLinkByPath(EntityComponentManager &_ecm,
+                                  const Entity _modelEntity,
+                                  const std::string &_path);
   };
   }
 }
