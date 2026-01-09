@@ -5,36 +5,45 @@ find_package(ament_cmake QUIET)
 
 ament_environment_hooks("hooks/resource_paths.dsv.in")
 
-# Harmonic
-if("$ENV{GZ_VERSION}" STREQUAL "harmonic")
-  set(GZ_TARGET_PREFIX gz)
+# Gazebo version, use env variable or ROS 2 official pairing for LTS
+# https://gazebosim.org/docs/latest/ros_installation/
+if(DEFINED ENV{GZ_VERSION})
+  set(GZ_VERSION "$ENV{GZ_VERSION}")
+elseif(DEFINED ENV{IGN_VERSION})
+  set(GZ_VERSION "$ENV{IGN_VERSION}")
+elseif("$ENV{ROS_DISTRO}" STRGREATER_EQUAL "lyrical")
+  set(GZ_VERSION "jetty")
+elseif("$ENV{ROS_DISTRO}" STRGREATER_EQUAL "jazzy")
+  set(GZ_VERSION "harmonic")
+else()
+  set(GZ_VERSION "fortress")
+endif()
 
+message(STATUS "Compiling against Gazebo ${GZ_VERSION}")
+set(GZ_TARGET_PREFIX gz)
+
+if("${GZ_VERSION}" STREQUAL "jetty")
+  set(GZ_PLUGIN plugin4)
+  set(GZ_COMMON common7)
+  set(GZ_SIM sim10)
+
+elseif("${GZ_VERSION}" STREQUAL "harmonic")
   set(GZ_PLUGIN plugin2)
   set(GZ_COMMON common5)
   set(GZ_SIM sim8)
 
-  message(STATUS "Compiling against Gazebo Harmonic")
-
-# Garden
-elseif("$ENV{GZ_VERSION}" STREQUAL "garden")
-  set(GZ_TARGET_PREFIX gz)
-
+elseif("${GZ_VERSION}" STREQUAL "garden")
   set(GZ_PLUGIN plugin2)
   set(GZ_COMMON common5)
   set(GZ_SIM sim7)
 
-  message(STATUS "Compiling against Gazebo Garden")
-
-# Default to Fortress
 else()
   set(GZ_TARGET_PREFIX ignition)
 
   set(GZ_PLUGIN plugin1)
   set(GZ_COMMON common4)
   set(GZ_SIM gazebo6)
-
   add_definitions(-DFOR_IGNITION_FORTRESS)
-  message(STATUS "Compiling against Ignition Fortress")
 endif()
 
 find_package(${GZ_TARGET_PREFIX}-${GZ_PLUGIN})

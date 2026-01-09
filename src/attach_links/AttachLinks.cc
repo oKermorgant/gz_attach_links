@@ -19,6 +19,7 @@
 
 using namespace gz;
 using namespace sim;
+using namespace GZ_SIM_VERSION_NAMESPACE;
 using namespace systems;
 
 /////////////////////////////////////////////////
