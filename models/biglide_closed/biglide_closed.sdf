@@ -25,6 +25,21 @@
         </geometry>
       </visual>
     </link>
+    <link name="base">
+      <pose>0.2 0 0  0 0 0</pose>
+      <inertial>
+        <mass>1.0</mass>
+        <inertia>
+          <ixx>1e-5</ixx>
+          <iyy>1e-5</iyy>
+          <izz>1e-5</izz>
+          <ixy>0.0</ixy>
+          <ixz>0.0</ixz>
+          <iyz>0.0</iyz>
+        </inertia>
+      </inertial>
+      <gravity>0</gravity>
+    </link>
     <link name="rightRail">
       <pose>0.4 0 0  0 0 0</pose>
       <inertial>
@@ -167,6 +182,16 @@
       <parent>world</parent>
       <child>leftRail</child>
     </joint>
+    <joint name="jointRightRail" type="fixed">
+      <pose>0 0 0 0 0 0</pose>
+      <parent>world</parent>
+      <child>rightRail</child>
+    </joint>
+    <joint name="jointBase" type="fixed">
+      <pose>0 0 0 0 0 0</pose>
+      <parent>world</parent>
+      <child>base</child>
+    </joint>
     <joint name="A11" type="prismatic">
       <pose>0 0 0 0 0 0</pose>
       <parent>world</parent>
@@ -182,8 +207,8 @@
     </joint>
     <joint name="A21" type="prismatic">
       <pose>0 0 0 0 0 0</pose>
-      <parent>rightFoot</parent>
-      <child>rightRail</child>
+      <parent>world</parent>
+      <child>rightFoot</child>
       <axis>
         <xyz>0 1 0</xyz>
         <limit>
@@ -203,8 +228,8 @@
     </joint>
     <joint name="A22" type="revolute">
       <pose>0.0 0 0 0 0 0</pose>
-      <parent>rightArm</parent>
-      <child>rightFoot</child>
+      <parent>rightFoot</parent>
+      <child>rightArm</child>
       <axis>
         <xyz>0 0 1</xyz>
       </axis>
@@ -222,35 +247,7 @@
       <child>endEffector</child>
     </joint>
 
-    <!-- this one below is changed to a plugin -->
-    <!--joint name="jointRightRail" type="fixed">
-      <pose>0 0 0 0 0 0</pose>
-      <parent>world</parent>
-      <child>rightRail</child>
-    </joint-->
-
-    <link name="rightRailDummy"/>
-
-    <joint name="rightRailJoint" type="fixed">
-      <parent>world</parent>
-      <child>rightRailDummy</child>
-    </joint>
-
-    <!-- custom plugin, simpler but custom -->
-    <!--plugin filename="libattach-links.so" name="gz::sim::systems::AttachLinks">
-      <parent>rightRailDummy</parent>
-      <child>rightRail</child>
-    </plugin-->
-
-    <!-- existing plugin, hope this model is spawned under this name -->
-    <plugin filename="libgz-sim-detachable-joint-system.so" name="gz::sim::systems::DetachableJoint">
-      <parent_link>rightRailDummy</parent_link>
-      <child_model>biglide</child_model>  <!-- of course I know him, it's me -->
-      <child_link>rightRail</child_link>
-      <attach_topic>close_loop</attach_topic>
-    </plugin>
-
-    <plugin filename="libignition-gazebo-joint-state-publisher-system.so"
+        <plugin filename="libignition-gazebo-joint-state-publisher-system.so"
             name="ignition::gazebo::systems::JointStatePublisher"/>
 
     <plugin filename="libignition-gazebo-apply-joint-force-system.so"
@@ -262,5 +259,6 @@
           name="ignition::gazebo::systems::ApplyJointForce">
         <joint_name>A21</joint_name>
     </plugin>
+
   </model>
 </sdf>

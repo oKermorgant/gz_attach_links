@@ -67,5 +67,6 @@ target_link_libraries(attach-links
 
 install(DIRECTORY launch models DESTINATION share/${PROJECT_NAME})
 install(TARGETS attach-links DESTINATION lib/${PROJECT_NAME})
+install(PROGRAMS src/unroll_loops DESTINATION lib/${PROJECT_NAME})
 
 ament_package()

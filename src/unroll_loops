@@ -1,0 +1,143 @@
+#!/usr/bin/env python3
+
+import sys
+import os
+import subprocess as sp
+from collections import defaultdict
+import argparse
+from importlib import import_module
+
+
+class Model:
+
+    def __init__(self, src, name = ''):
+        self.root = self.sdformat.Root()
+        with open(src) as sdf:
+            self.root.load_sdf_string(sdf.read())
+        self.model = self.root.model()
+        self.name = name if name else self.model.name()
+        self.detect_loops()
+        self.dummy_links = defaultdict(list)
+
+    def detect_loops(self):
+        # build link graph as {child: [parent joints]}
+        self.graph = defaultdict(list)
+        for j in range(self.model.joint_count()):
+            joint = self.model.joint_by_index(j)
+            self.graph[joint.child_name()].append(joint)
+        self.loops = [(child,parents) for child,parents in self.graph.items() if len(parents) > 1]
+
+    def print_graph(self):
+        for child,joints in self.graph.items():
+            loop = '' if len(joints) == 1 else '  /!\\ loop'
+            print('  ', child, '->', ', '.join(j.parent_name() for j in joints), loop)
+
+    def unroll(self, loop):
+        for child,joints in self.loops:
+            # open every loops except the first one
+            for i,joint in enumerate(joints[1:]):
+                self.make_detachable(joint, i)
+
+    def make_detachable(self, joint, i):
+        child = joint.child_name()
+        parent = joint.parent_name()
+
+        # add a dummy link
+        # will be actually added as basic xml when writing
+        dummy = f'{child}_dummy{i+1}'
+        self.dummy_links[child].append(dummy)
+
+        # change the joint child
+        joint.set_child_name(dummy)
+
+        # register corresponding plugin
+        plugin_xml = f'''
+        <!-- this plugin was automatically added -->
+        <parent_link>{child}</parent_link>
+        <child_model>{self.name}</child_model>
+        <child_link>{dummy}</child_link>
+        <attach_topic>{dummy}_topic</attach_topic>'''
+        plugin = self.sdformat.Plugin(_filename='libgz-sim-detachable-joint-system.so',
+                                   _name = 'gz::sim::systems::DetachableJoint',
+                                   _xmlContent = plugin_xml)
+        self.model.add_plugin(plugin)
+
+    def write(self, dst):
+
+        xml = self.root.to_string()
+
+        # add dummy links at the end of the model
+        end = '</model>'
+        indent = '\n  '
+        dummies_xml = []
+        for child, dummies in self.dummy_links.items():
+            pose = self.model.link_by_name(child).raw_pose()
+            for dummy in dummies:
+                dummies_xml.append(f"<link name='{dummy}'><pose>{pose}</pose></link>")
+        dummies_xml.append(end)
+        xml = xml.replace(end, indent.join(dummies_xml))
+
+        with open(dst, 'w') as out:
+            out.write(xml)
+
+
+def main(args):
+
+    # deal with sdformat version
+    if args.version == 0:
+        ver = sp.run('gz sdf --versions'.split(), stdout=sp.PIPE).stdout.decode().splitlines()
+        args.version = ver[0].split('.')[0]
+    Model.sdformat = import_module(f'sdformat{args.version}')
+
+    if not os.path.exists(args.file):
+        print(f'[parse_loops]: File "{args.file}" does not exist',
+              file = sys.stderr)
+
+    dst = args.out
+    if not dst:
+        basedir, filename = os.path.split(args.file)
+        basename, ext = os.path.splitext(filename)
+        dst = f'{basedir}/{basename}_detachable{ext}'
+
+    # load given file
+    model = Model(args.file, args.name)
+
+    if args.test:
+        print('Before unroll')
+        model.print_graph()
+
+    if not model.loops:
+        # just spawn initial file already
+        return args.file
+
+    # TODO test with several loops inside a model
+    for loop in model.loops:
+        model.unroll(loop)
+
+    model.write(dst)
+
+    if args.test:
+        print('After unroll')
+        unrolled = Model(dst)
+        unrolled.print_graph()
+
+    return dst
+
+
+
+if __name__ == '__main__':
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-f', '--file', metavar='sdf', type=str,
+                        help = 'Origin SDF file')
+    parser.add_argument('-n', '--name', metavar='name', type=str,
+                        help = 'Model name as spawned', default = '')
+    parser.add_argument('-o', '--out', metavar='output', type=str,
+                        help = 'Out file, if any closed loop', default = '')
+    parser.add_argument('-t', '--test', action='store_true',
+                        help = 'Test mode with more prints', default = False)
+    parser.add_argument('-v', '--version', type=int,
+                        help = 'SDFormat version, 0 to pick the smallest available', default = 0)
+    args = parser.parse_args()
+
+    print(main(args), end='')

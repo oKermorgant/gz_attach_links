@@ -105,7 +105,7 @@
         </material>
       </visual>
     </link>
-    <joint name="joint_A" type="revolute">
+    <joint name="A11" type="revolute">
       <pose>0.01 0.15000000000000002 0 0 0 0</pose>
       <parent>world</parent>
       <child>link_AB</child>
@@ -121,7 +121,7 @@
         <xyz>0 0 1</xyz>
       </axis>
     </joint>
-    <joint name="joint_D" type="revolute">
+    <joint name="A21" type="revolute">
       <pose>-0.01 0.15000000000000002 0 0 0 0</pose>
       <parent>world</parent>
       <child>link_CD</child>
@@ -167,12 +167,12 @@
 
     <plugin filename="libignition-gazebo-apply-joint-force-system.so"
           name="ignition::gazebo::systems::ApplyJointForce">
-        <joint_name>joint_A</joint_name>
+        <joint_name>A11</joint_name>
     </plugin>
 
     <plugin filename="libignition-gazebo-apply-joint-force-system.so"
           name="ignition::gazebo::systems::ApplyJointForce">
-        <joint_name>joint_D</joint_name>
+        <joint_name>A21</joint_name>
     </plugin>
 
 
