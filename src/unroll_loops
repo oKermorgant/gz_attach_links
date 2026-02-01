@@ -94,9 +94,11 @@ def main(args):
     if not os.path.exists(args.file):
         print(f'[parse_loops]: File "{args.file}" does not exist',
               file = sys.stderr)
+        return
 
     dst = args.out
     if not dst:
+        # use a dst in the same folder as the base file, allows resolving meshes and all
         basedir, filename = os.path.split(args.file)
         basename, ext = os.path.splitext(filename)
         dst = f'{basedir}/{basename}_detachable{ext}'
