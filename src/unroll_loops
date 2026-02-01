@@ -25,20 +25,22 @@ class Model:
         for j in range(self.model.joint_count()):
             joint = self.model.joint_by_index(j)
             self.graph[joint.child_name()].append(joint)
-        self.loops = [(child,parents) for child,parents in self.graph.items() if len(parents) > 1]
+        self.loops = [joints for joints in self.graph.values() if len(joints) > 1]
 
     def print_graph(self):
         for child,joints in self.graph.items():
             loop = '' if len(joints) == 1 else '  /!\\ loop'
             print('  ', child, '->', ', '.join(j.parent_name() for j in joints), loop)
 
-    def unroll(self, loop):
-        for child,joints in self.loops:
+    def unroll(self):
+        # unrolls all loops
+        for joints in self.loops:
             # open every loops except the first one
             for joint in joints[1:]:
                 self.make_detachable(joint)
 
     def make_detachable(self, joint):
+
         child = joint.child_name()
         parent = joint.parent_name()
 
@@ -111,8 +113,7 @@ def main(args):
         return args.file
 
     # TODO test with several loops inside a model
-    for loop in model.loops:
-        model.unroll(loop)
+    model.unroll()
 
     model.write(dst)
 
