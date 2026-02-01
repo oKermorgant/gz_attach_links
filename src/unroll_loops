@@ -35,16 +35,16 @@ class Model:
     def unroll(self, loop):
         for child,joints in self.loops:
             # open every loops except the first one
-            for i,joint in enumerate(joints[1:]):
-                self.make_detachable(joint, i)
+            for joint in joints[1:]:
+                self.make_detachable(joint)
 
-    def make_detachable(self, joint, i):
+    def make_detachable(self, joint):
         child = joint.child_name()
         parent = joint.parent_name()
 
         # add a dummy link
         # will be actually added as basic xml when writing
-        dummy = f'{child}_dummy{i+1}'
+        dummy = f'{child}_from_{parent}'
         self.dummy_links[child].append(dummy)
 
         # change the joint child
