@@ -99,7 +99,7 @@ def main(args):
     dst = args.out
     if not dst:
         # use a dst in the same folder as the base file, allows resolving meshes and all
-        basedir, filename = os.path.split(args.file)
+        basedir, filename = os.path.split(os.path.abspath(args.file))
         basename, ext = os.path.splitext(filename)
         dst = f'{basedir}/{basename}_detachable{ext}'
 
